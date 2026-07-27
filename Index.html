@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>القلم — تسجيل الدخول (معاينة)</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--royal:#1E3A8A;--deep:#14275F;--light:#2E56B8}
+  *{box-sizing:border-box;margin:0}
+  body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--royal)}
+  .wrap{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
+  /* الفورم */
+  .form-side{background:var(--deep);display:flex;align-items:center;justify-content:center;padding:40px}
+  .form{width:100%;max-width:360px}
+  h1{color:#fff;font-size:30px}
+  .sub{color:rgba(255,255,255,.6);font-size:14px;margin:8px 0 32px}
+  label{display:block;color:rgba(255,255,255,.8);font-size:14px;font-weight:600;margin-bottom:8px}
+  label .req{color:#fca5a5}
+  .inp{position:relative;margin-bottom:20px}
+  .inp input{width:100%;height:48px;border-radius:12px;border:1.5px solid rgba(255,255,255,.2);
+    background:rgba(255,255,255,.1);padding:0 16px;color:#fff;font-family:inherit;font-size:15px;outline:none;transition:.2s}
+  .inp input::placeholder{color:rgba(255,255,255,.4)}
+  .inp input:focus{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.16);box-shadow:0 0 0 4px rgba(255,255,255,.1)}
+  .eye{position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.5);cursor:pointer}
+  .rem{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.7);font-size:14px;font-weight:400;margin-bottom:28px}
+  .rem input{width:16px;height:16px}
+  .btn{width:100%;height:48px;border:none;border-radius:12px;cursor:pointer;font-family:inherit;font-size:15px;font-weight:700;color:#fff;
+    background:linear-gradient(to left,#3B6FE8,#2A5BD7);box-shadow:0 10px 30px rgba(20,39,95,.5);transition:.2s}
+  .btn:hover{filter:brightness(1.1)}
+  .foot{text-align:center;color:rgba(255,255,255,.4);font-size:12px;margin-top:32px}
+  /* الهوية */
+  .brand{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+    background:linear-gradient(to bottom left,var(--light),var(--royal) 55%,var(--deep))}
+  .brand::before{content:"";position:absolute;inset:0;opacity:.07;
+    background-image:repeating-linear-gradient(-45deg,#fff 0 2px,transparent 2px 28px)}
+  .brand::after{content:"";position:absolute;inset-inline-start:-96px;top:-96px;width:384px;height:384px;border-radius:50%;background:rgba(255,255,255,.1);filter:blur(60px)}
+  .logo{position:relative;text-align:center}
+  .logo .big{font-size:110px;font-weight:700;line-height:1;color:#fff;text-shadow:0 10px 50px rgba(0,0,0,.35)}
+  .logo .subt{margin-top:12px;font-size:24px;font-weight:500;letter-spacing:3px;color:rgba(255,255,255,.85)}
+  .pitch{position:relative;max-width:420px;text-align:center;color:rgba(255,255,255,.7);font-size:15px;line-height:2.2}
+  .chips{position:relative;display:flex;gap:12px}
+  .chip{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);
+    border-radius:99px;padding:8px 14px;color:rgba(255,255,255,.8);font-size:12px}
+  .chip svg{width:16px;height:16px}
+  @media(max-width:900px){.wrap{grid-template-columns:1fr}.brand{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="form-side">
+    <form class="form" onsubmit="return false">
+      <h1>مرحباً بك 👋</h1>
+      <div class="sub">سجّل دخولك للوصول إلى لوحة التحكم</div>
+      <label>البريد الإلكتروني <span class="req">*</span></label>
+      <div class="inp"><input type="email" placeholder="name@qalam.iq"></div>
+      <label>كلمة المرور <span class="req">*</span></label>
+      <div class="inp">
+        <input id="pw" type="password" placeholder="••••••••">
+        <span class="eye" onclick="var p=document.getElementById('pw');p.type=p.type==='password'?'text':'password'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </span>
+      </div>
+      <label class="rem"><input type="checkbox"> تذكّرني</label>
+      <button class="btn">تسجيل الدخول</button>
+      <div class="foot">القلم للاستشارات والخدمات القانونية © 2026</div>
+    </form>
+  </div>
+  <div class="brand">
+    <div class="logo"><div class="big">القلم</div><div class="subt">للاستشارات والخدمات القانونية</div></div>
+    <p class="pitch">نظام إدارة متكامل للقضايا والمعاملات القانونية بأعلى معايير الاحترافية والأمان.</p>
+    <div class="chips">
+      <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V5l-8-3Z"/></svg> حماية</div>
+      <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg> تقارير</div>
+      <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><path d="M4 20a5 5 0 0 1 10 0M16 6a3 3 0 0 1 0 6"/></svg> فريق عمل</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
