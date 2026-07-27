@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>القلم — نموذج تصميم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ── القاعدة الداكنة ── */
+  --bg:#080F1F; --bg-2:#0C1729; --surface:#111E36; --surface-2:#16233F; --surface-3:#1C2C4C;
+  --border:rgba(255,255,255,.08); --border-2:rgba(255,255,255,.14);
+  /* ── الهوية ── */
+  --primary:#4C82F0; --primary-2:#6E9CF6; --primary-g:rgba(76,130,240,.16);
+  --gold:#E7A927; --gold-2:#F5C24B; --gold-g:rgba(231,169,39,.15);
+  /* ── نص ── */
+  --text:#EAF0FA; --text-2:#9DAEC9;
+  --text-3:#65769A;
+  /* ── حالات ── */
+  --green:#25C08A; --green-g:rgba(37,192,138,.14);
+  --amber:#E7A927; --amber-g:rgba(231,169,39,.14);
+  --red:#F1566E; --red-g:rgba(241,86,110,.14);
+  --teal:#2BB8C4; --teal-g:rgba(43,184,196,.14);
+  /* ── نظام ── */
+  --r-sm:9px; --r-md:14px; --r-lg:20px; --r-xl:26px;
+  --sp:8px;
+  --sh-sm:0 1px 2px rgba(0,0,0,.3);
+  --sh-md:0 8px 24px rgba(0,0,0,.28);
+  --sh-lg:0 20px 50px rgba(0,0,0,.45);
+  --ease:cubic-bezier(.22,1,.36,1); --ease-back:cubic-bezier(.34,1.56,.64,1);
+  --font:'IBM Plex Sans Arabic',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::selection{background:var(--primary-g)}
+:where(button,a,input):focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:var(--r-sm)}
+
+/* ══ شريط المعاينة ══ */
+.demo-bar{position:fixed;inset-block-start:0;inset-inline:0;height:52px;z-index:100;display:flex;align-items:center;gap:14px;
+  padding:0 18px;background:rgba(8,15,31,.85);backdrop-filter:blur(14px);border-block-end:1px solid var(--border)}
+.demo-bar .brand{font-weight:700;font-size:14px;letter-spacing:-.2px;color:var(--text)}
+.demo-bar .brand span{color:var(--gold)}
+.demo-bar .tag{font-size:11px;color:var(--text-3);border:1px solid var(--border);padding:3px 9px;border-radius:99px}
+.demo-nav{margin-inline-start:auto;display:flex;gap:4px;background:var(--surface);padding:4px;border-radius:99px;border:1px solid var(--border)}
+.demo-nav button{padding:7px 15px;border-radius:99px;font-size:13px;font-weight:600;color:var(--text-2);transition:all .25s var(--ease)}
+.demo-nav button.on{background:var(--primary);color:#fff;box-shadow:0 4px 14px var(--primary-g)}
+.demo-nav button:not(.on):hover{color:var(--text)}
+
+.stage{position:fixed;inset:52px 0 0 0;overflow:auto}
+.screen{display:none;min-height:100%}
+.screen.on{display:block;animation:fade .4s var(--ease)}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ═══════════════ تسجيل الدخول ═══════════════ */
+.login{display:grid;grid-template-columns:1.05fr .95fr;min-height:100%}
+.login-brand{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:22px;
+  background:radial-gradient(120% 90% at 80% 10%,#12305F 0%,#0B1B39 55%,#081226 100%)}
+.login-brand::before{content:"";position:absolute;inset:0;
+  background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0 2px,transparent 2px 26px)}
+.login-brand::after{content:"";position:absolute;width:380px;height:380px;border-radius:50%;filter:blur(20px);
+  background:radial-gradient(circle,var(--gold-g),transparent 65%);inset-block-start:-60px;inset-inline-start:-40px}
+.qalam{position:relative;font-size:96px;font-weight:700;line-height:.9;color:#EAF2FF;text-shadow:0 8px 40px rgba(76,130,240,.5)}
+.qalam small{display:block;font-size:22px;font-weight:500;letter-spacing:2px;color:#AFC4E6;margin-top:10px}
+.login-brand .pitch{position:relative;text-align:center;color:#B8C9E6;font-size:14px;max-width:340px;line-height:1.9}
+.login-brand .creds{position:relative;display:flex;gap:10px;margin-top:6px}
+.login-brand .creds div{display:flex;align-items:center;gap:7px;font-size:12px;color:#9FB6DA;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);padding:8px 12px;border-radius:99px}
+.login-form-wrap{display:flex;align-items:center;justify-content:center;padding:40px;background:var(--bg)}
+.login-card{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);
+  padding:38px 34px;box-shadow:var(--sh-lg)}
+.login-card h1{font-size:26px;font-weight:700;margin-bottom:6px}
+.login-card .sub{color:var(--text-2);font-size:14px;margin-bottom:28px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:8px}
+.field label b{color:var(--red)}
+.inp{position:relative}
+.inp input{width:100%;height:50px;padding:0 16px;background:var(--bg-2);border:1.5px solid var(--border);
+  border-radius:var(--r-md);color:var(--text);font-family:inherit;font-size:15px;transition:border-color .2s,box-shadow .2s}
+.inp input::placeholder{color:var(--text-3)}
+.inp input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-g)}
+.inp .eye{position:absolute;inset-inline-start:12px;inset-block-start:50%;transform:translateY(-50%);color:var(--text-3);display:flex}
+.row-between{display:flex;align-items:center;justify-content:space-between;margin:4px 0 26px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);cursor:pointer}
+.chk i{width:18px;height:18px;border-radius:6px;border:1.5px solid var(--border-2);display:inline-block}
+.link{font-size:13px;color:var(--primary-2);font-weight:600}
+.btn-primary{width:100%;height:52px;border-radius:var(--r-md);font-size:15px;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,var(--primary),#3D6FDB);box-shadow:0 8px 22px var(--primary-g);
+  transition:transform .15s var(--ease),box-shadow .2s}
+.btn-primary:hover{box-shadow:0 12px 30px rgba(76,130,240,.4)}
+.btn-primary:active{transform:scale(.98)}
+.login-foot{text-align:center;color:var(--text-3);font-size:12px;margin-top:24px}
+
+/* ═══════════════ هيكل التطبيق ═══════════════ */
+.app{display:grid;grid-template-columns:1fr 264px;min-height:100%}
+.sidebar{background:var(--bg-2);border-inline-start:1px solid var(--border);padding:20px 14px;position:sticky;inset-block-start:0;align-self:start;height:calc(100vh - 52px);overflow:auto}
+.side-brand{display:flex;align-items:center;gap:10px;padding:6px 8px 18px}
+.side-brand .logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--gold),var(--gold-2));
+  display:grid;place-items:center;color:#1A130A;font-weight:700;font-size:18px}
+.side-brand b{font-size:14px;line-height:1.3}
+.side-brand span{display:block;font-size:11px;color:var(--text-3);font-weight:400}
+.nav-group{font-size:11px;color:var(--text-3);font-weight:600;padding:16px 10px 6px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:var(--r-md);color:var(--text-2);
+  font-size:14px;font-weight:500;transition:all .2s var(--ease);cursor:pointer;position:relative;width:100%;text-align:start}
+.nav-item svg{width:19px;height:19px;flex:0 0 auto;opacity:.85}
+.nav-item:hover{background:var(--surface);color:var(--text)}
+.nav-item.on{background:var(--primary-g);color:var(--primary-2)}
+.nav-item.on::before{content:"";position:absolute;inset-inline-start:0;inset-block:8px;width:3px;border-radius:3px;background:var(--gold)}
+.nav-item .cnt{margin-inline-start:auto;font-size:11px;font-weight:700;background:var(--surface-2);color:var(--text-2);padding:2px 8px;border-radius:99px}
+
+.main{padding:26px 30px 60px}
+.topbar{display:flex;align-items:center;gap:16px;margin-bottom:26px}
+.topbar h2{font-size:22px;font-weight:700}
+.topbar .search{margin-inline-start:auto;display:flex;align-items:center;gap:9px;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--r-md);padding:0 14px;height:42px;width:280px;color:var(--text-3)}
+.topbar .search input{background:none;border:none;outline:none;color:var(--text);font-family:inherit;font-size:14px;width:100%}
+.icon-btn{width:42px;height:42px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--border);
+  display:grid;place-items:center;color:var(--text-2);transition:all .2s}
+.icon-btn:hover{color:var(--text);border-color:var(--border-2)}
+.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-2));
+  display:grid;place-items:center;color:#1A130A;font-weight:700}
+
+/* بطاقات إحصائية */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px 20px;
+  position:relative;overflow:hidden;transition:transform .25s var(--ease),border-color .25s}
+.stat:hover{transform:translateY(-3px);border-color:var(--border-2)}
+.stat .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.stat .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center}
+.stat .delta{font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;display:flex;align-items:center;gap:3px}
+.stat .num{font-size:32px;font-weight:700;line-height:1;letter-spacing:-.5px}
+.stat .lbl{font-size:13px;color:var(--text-2);margin-top:6px}
+.stat .spark{position:absolute;inset-block-end:0;inset-inline:0;height:42px;opacity:.9}
+.stat.alert{border-color:rgba(241,86,110,.3)}
+.stat.alert::after{content:"";position:absolute;inset-block-start:0;inset-inline:0;height:3px;background:linear-gradient(90deg,var(--red),transparent)}
+
+/* بطاقة كبيرة + جدول */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+.panel .hd{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-block-end:1px solid var(--border)}
+.panel .hd h3{font-size:16px;font-weight:700}
+.panel .hd .more{font-size:13px;color:var(--primary-2);font-weight:600}
+table{width:100%;border-collapse:collapse}
+thead th{text-align:start;font-size:12px;font-weight:600;color:var(--text-3);padding:13px 22px;background:var(--bg-2)}
+tbody td{padding:15px 22px;font-size:14px;border-block-end:1px solid var(--border);color:var(--text)}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr:last-child td{border-block-end:none}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:4px 11px;border-radius:99px}
+.pill.green{background:var(--green-g);color:var(--green)}
+.pill.amber{background:var(--amber-g);color:var(--amber)}
+.pill.red{background:var(--red-g);color:var(--red)}
+.pill.teal{background:var(--teal-g);color:var(--teal)}
+.pill.blue{background:var(--primary-g);color:var(--primary-2)}
+.progress{display:flex;align-items:center;gap:10px}
+.progress .bar{flex:1;height:6px;background:var(--surface-3);border-radius:99px;overflow:hidden;min-width:70px}
+.progress .bar i{display:block;height:100%;border-radius:99px}
+.progress b{font-size:12px;font-weight:700;width:34px}
+
+.grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-top:16px}
+
+/* ═══════════════ سير العمل ═══════════════ */
+.wf-head{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px 24px;
+  display:flex;align-items:center;gap:22px;margin-bottom:22px}
+.wf-head .tj{font-size:12px;font-weight:700;color:var(--primary-2);background:var(--primary-g);padding:5px 12px;border-radius:8px}
+.wf-head h3{font-size:20px;font-weight:700}
+.wf-head .meta{font-size:13px;color:var(--text-2);margin-top:3px}
+.ring{margin-inline-start:auto;display:flex;align-items:center;gap:16px}
+.ring .txt{text-align:center}
+.ring .txt b{font-size:13px;color:var(--text-2);font-weight:500}
+.ring svg{transform:rotate(-90deg)}
+.wf-lane{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;margin-bottom:18px}
+.wf-lane .lane-hd{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.wf-lane .lane-hd .who{width:34px;height:34px;border-radius:10px;background:var(--surface-2);display:grid;place-items:center;color:var(--gold)}
+.wf-lane .lane-hd b{font-size:15px;font-weight:700}
+.wf-lane .lane-hd .cnt{font-size:11px;color:var(--text-3);background:var(--bg-2);padding:3px 10px;border-radius:99px}
+.steps{display:flex;gap:0;align-items:stretch;overflow-x:auto;padding-bottom:6px}
+.step{flex:0 0 168px;background:var(--bg-2);border:1.5px solid var(--border);border-radius:var(--r-md);padding:16px 14px;
+  text-align:center;position:relative;transition:transform .25s var(--ease)}
+.step:not(:last-child){margin-inline-start:26px}
+.step:not(:last-child)::after{content:"";position:absolute;inset-inline-start:-26px;inset-block-start:50%;width:26px;height:2px;background:var(--border-2)}
+.step .dot{width:44px;height:44px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;font-weight:700;font-size:16px}
+.step.done .dot{background:var(--green);color:#04140D;box-shadow:0 0 0 5px var(--green-g)}
+.step.done{border-color:rgba(37,192,138,.4)}
+.step.done:not(:last-child)::after{background:var(--green)}
+.step.current{border-color:var(--primary);background:var(--surface-2);transform:translateY(-4px);box-shadow:0 12px 30px rgba(76,130,240,.2)}
+.step.current .dot{background:var(--primary);color:#fff;box-shadow:0 0 0 5px var(--primary-g)}
+.step.wait{opacity:.55}
+.step.wait .dot{background:var(--surface-3);color:var(--text-2)}
+.step .name{font-size:13px;font-weight:600;line-height:1.4;min-height:36px}
+.step .no{font-size:11px;color:var(--text-3);margin-top:4px}
+.step .st{margin-top:10px;font-size:11px;font-weight:600;padding:4px 0;border-radius:8px}
+.step.done .st{color:var(--green)}
+.step.current .st{color:var(--primary-2)}
+.step.wait .st{color:var(--text-3)}
+.step .flag{position:absolute;inset-block-start:-11px;inset-inline-start:50%;transform:translateX(-50%);white-space:nowrap;
+  font-size:10px;font-weight:700;background:var(--gold);color:#1A130A;padding:3px 10px;border-radius:99px}
+.step .late{margin-top:7px;font-size:10px;font-weight:700;color:var(--red);background:var(--red-g);padding:4px 6px;border-radius:7px}
+
+/* ═══════════════ الأقسام ═══════════════ */
+.sec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.sec-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;
+  transition:all .25s var(--ease);cursor:pointer}
+.sec-card:hover{transform:translateY(-3px);border-color:var(--primary)}
+.sec-card .ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;margin-bottom:14px}
+.sec-card h4{font-size:16px;font-weight:700;margin-bottom:5px}
+.sec-card p{font-size:13px;color:var(--text-2);line-height:1.7}
+.sec-card .foot{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:12px;color:var(--text-3)}
+
+@media(max-width:920px){
+  .login,.app{grid-template-columns:1fr}
+  .login-brand{display:none}
+  .sidebar{display:none}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .grid-2,.sec-grid{grid-template-columns:1fr}
+  .demo-nav{overflow:auto}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<div class="demo-bar">
+  <div class="brand">القلم<span>.</span></div>
+  <div class="tag">نموذج تصميم — معاينة</div>
+  <div class="demo-nav">
+    <button data-s="login" class="on">تسجيل الدخول</button>
+    <button data-s="dash">لوحة التحكم</button>
+    <button data-s="wf">سير العمل</button>
+    <button data-s="sec">الأقسام</button>
+  </div>
+</div>
+
+<div class="stage">
+
+<!-- ══════════ تسجيل الدخول ══════════ -->
+<section class="screen on" id="login">
+  <div class="login">
+    <div class="login-brand">
+      <div class="qalam">القلم<small>للاستشارات والخدمات القانونية</small></div>
+      <div class="pitch">نظام إدارة متكامل للقضايا والمعاملات القانونية بأعلى معايير الاحترافية والأمان.</div>
+      <div class="creds">
+        <div>◆ فريق عمل</div><div>◆ تقارير دقيقة</div><div>◆ حماية عالية</div>
+      </div>
+    </div>
+    <div class="login-form-wrap">
+      <div class="login-card">
+        <h1>مرحباً بك 👋</h1>
+        <div class="sub">سجّل دخولك للوصول إلى لوحة التحكم</div>
+        <div class="field">
+          <label>البريد الإلكتروني <b>*</b></label>
+          <div class="inp"><input type="email" placeholder="name@qalam.iq"></div>
+        </div>
+        <div class="field">
+          <label>كلمة المرور <b>*</b></label>
+          <div class="inp">
+            <input type="password" placeholder="••••••••">
+            <span class="eye"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
+          </div>
+        </div>
+        <div class="row-between">
+          <label class="chk"><i></i> تذكّرني</label>
+          <a class="link" href="#">نسيت كلمة المرور؟</a>
+        </div>
+        <button class="btn-primary">تسجيل الدخول</button>
+        <div class="login-foot">القلم للاستشارات والخدمات القانونية © 2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ لوحة التحكم ══════════ -->
+<section class="screen" id="dash">
+  <div class="app">
+    <div class="main">
+      <div class="topbar">
+        <h2>لوحة التحكم</h2>
+        <div class="search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg><input placeholder="بحث ذكي..."></div>
+        <button class="icon-btn"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></button>
+        <div class="avatar">أ</div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="top"><div class="ico" style="background:var(--primary-g);color:var(--primary-2)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><span class="delta" style="background:var(--green-g);color:var(--green)">▲ 8%</span></div>
+          <div class="num">368</div><div class="lbl">إجمالي المهام</div>
+          <svg class="spark" viewBox="0 0 200 42" preserveAspectRatio="none"><path d="M0 34 C25 30 40 22 60 26 S110 12 130 18 170 8 200 14 V42 H0Z" fill="var(--primary-g)"/><path d="M0 34 C25 30 40 22 60 26 S110 12 130 18 170 8 200 14" fill="none" stroke="var(--primary)" stroke-width="2"/></svg>
+        </div>
+        <div class="stat">
+          <div class="top"><div class="ico" style="background:var(--teal-g);color:var(--teal)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="4"/></svg></div><span class="delta" style="background:var(--teal-g);color:var(--teal)">81%</span></div>
+          <div class="num">298</div><div class="lbl">قيد التنفيذ</div>
+          <svg class="spark" viewBox="0 0 200 42" preserveAspectRatio="none"><path d="M0 30 C30 34 50 20 70 24 S120 30 140 20 180 22 200 16 V42 H0Z" fill="var(--teal-g)"/><path d="M0 30 C30 34 50 20 70 24 S120 30 140 20 180 22 200 16" fill="none" stroke="var(--teal)" stroke-width="2"/></svg>
+        </div>
+        <div class="stat">
+          <div class="top"><div class="ico" style="background:var(--green-g);color:var(--green)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></div><span class="delta" style="background:var(--green-g);color:var(--green)">▲ 5%</span></div>
+          <div class="num">19</div><div class="lbl">مكتملة</div>
+          <svg class="spark" viewBox="0 0 200 42" preserveAspectRatio="none"><path d="M0 36 C40 34 60 30 90 28 S150 18 200 10 V42 H0Z" fill="var(--green-g)"/><path d="M0 36 C40 34 60 30 90 28 S150 18 200 10" fill="none" stroke="var(--green)" stroke-width="2"/></svg>
+        </div>
+        <div class="stat alert">
+          <div class="top"><div class="ico" style="background:var(--red-g);color:var(--red)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg></div><span class="delta" style="background:var(--red-g);color:var(--red)">مرفوضة 34</span></div>
+          <div class="num">3</div><div class="lbl">بانتظار الإجراء</div>
+          <svg class="spark" viewBox="0 0 200 42" preserveAspectRatio="none"><path d="M0 20 C30 18 50 28 70 24 S120 14 140 26 180 20 200 24 V42 H0Z" fill="var(--red-g)"/><path d="M0 20 C30 18 50 28 70 24 S120 14 140 26 180 20 200 24" fill="none" stroke="var(--red)" stroke-width="2"/></svg>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="hd"><h3>أداء المحامين</h3><a class="more" href="#">عرض الكل</a></div>
+          <table>
+            <thead><tr><th>المحامي</th><th>الإجمالي</th><th>قيد التنفيذ</th><th>نسبة الإنجاز</th></tr></thead>
+            <tbody>
+              <tr><td>محمد طارق فائق</td><td>79</td><td>75</td><td><div class="progress"><div class="bar"><i style="width:5%;background:var(--red)"></i></div><b style="color:var(--red)">5%</b></div></td></tr>
+              <tr><td>زينب محمد عبدالحميد</td><td>34</td><td>28</td><td><div class="progress"><div class="bar"><i style="width:18%;background:var(--amber)"></i></div><b style="color:var(--amber)">18%</b></div></td></tr>
+              <tr><td>علي عماد مجيد</td><td>31</td><td>27</td><td><div class="progress"><div class="bar"><i style="width:13%;background:var(--amber)"></i></div><b style="color:var(--amber)">13%</b></div></td></tr>
+              <tr><td>نبأ عبدالجبار احمد</td><td>28</td><td>24</td><td><div class="progress"><div class="bar"><i style="width:64%;background:var(--green)"></i></div><b style="color:var(--green)">64%</b></div></td></tr>
+              <tr><td>محمد صادق ابراهيم</td><td>24</td><td>20</td><td><div class="progress"><div class="bar"><i style="width:82%;background:var(--green)"></i></div><b style="color:var(--green)">82%</b></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel">
+          <div class="hd"><h3>آخر المهام</h3><a class="more" href="#">الكل</a></div>
+          <table>
+            <thead><tr><th>العنوان</th><th>النوع</th><th>الحالة</th></tr></thead>
+            <tbody>
+              <tr><td>رؤية الحداثة للاستثمار العقاري</td><td><span class="pill blue">تجارية</span></td><td><span class="pill amber">بانتظار الإجراء</span></td></tr>
+              <tr><td>البجع للسفر والسياحة</td><td><span class="pill blue">تجارية</span></td><td><span class="pill amber">بانتظار الإجراء</span></td></tr>
+              <tr><td>بوابة بغداد المتحدة</td><td><span class="pill teal">ضريبية</span></td><td><span class="pill teal">قيد التنفيذ</span></td></tr>
+              <tr><td>شمس الأصيل المتحدة</td><td><span class="pill blue">تجارية</span></td><td><span class="pill teal">قيد التنفيذ</span></td></tr>
+              <tr><td>قيس حميد عبدالله</td><td><span class="pill green">عقارية</span></td><td><span class="pill red">متأخرة</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="side-brand"><div class="logo">ق</div><b>القلم<span>للخدمات القانونية</span></b></div>
+      <button class="nav-item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1V9.5"/></svg> لوحة التحكم</button>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> المهام <span class="cnt">368</span></button>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg> البحث الذكي</button>
+      <div class="nav-group">الأقسام</div>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M6 21V8l6-4 6 4v13M10 21v-5h4v5"/></svg> إدارة القضايا</button>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg> القسم التجاري</button>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M7 8V6a5 5 0 0 1 10 0v2"/></svg> الحسابات</button>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><path d="M4 20a5 5 0 0 1 10 0M16 6a3 3 0 0 1 0 6"/></svg> الموارد البشرية</button>
+      <div class="nav-group">أخرى</div>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> الإعدادات</button>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════ سير العمل ══════════ -->
+<section class="screen" id="wf">
+  <div class="app">
+    <div class="main">
+      <div class="topbar"><h2>مخطط سير العمل</h2><div class="avatar" style="margin-inline-start:auto">أ</div></div>
+
+      <div class="wf-head">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px"><span class="tj">TJ-0215</span><h3>تأسيس شركة</h3></div>
+          <div class="meta">مهام تجارية — تسجيل شركات · المدى الحديث</div>
+        </div>
+        <div class="ring">
+          <span class="pill blue">◷ قيد التنفيذ</span>
+          <div class="txt"><b>التقدّم</b><div style="font-weight:700">5 / 21</div></div>
+          <svg width="58" height="58" viewBox="0 0 58 58"><circle cx="29" cy="29" r="24" fill="none" stroke="var(--surface-3)" stroke-width="6"/><circle cx="29" cy="29" r="24" fill="none" stroke="var(--gold)" stroke-width="6" stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="115"/><text x="29" y="34" text-anchor="middle" transform="rotate(90 29 29)" fill="var(--text)" font-size="14" font-weight="700" font-family="var(--font)">24%</text></svg>
+        </div>
+      </div>
+
+      <div class="wf-lane">
+        <div class="lane-hd"><div class="who"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><b>المدير المختص</b><span class="cnt">8 خطوات</span></div>
+        <div class="steps">
+          <div class="step done"><div class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="name">دراسة الملف</div><div class="no">الخطوة 1</div><div class="st">✓ مكتملة</div></div>
+          <div class="step done"><div class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="name">قابلة للتنفيذ؟</div><div class="no">الخطوة 2</div><div class="st">✓ مكتملة</div></div>
+          <div class="step done"><div class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="name">إعداد عرض الخدمات</div><div class="no">الخطوة 3</div><div class="st">✓ مكتملة</div></div>
+          <div class="step done"><div class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="name">إصدار العرض</div><div class="no">الخطوة 4</div><div class="st">✓ مكتملة</div></div>
+          <div class="step done"><div class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="name">إشعار العميل على واتساب</div><div class="no">الخطوة 5</div><div class="st">✓ مكتملة</div></div>
+          <div class="step current"><div class="flag">◉ الخطوة الحالية</div><div class="dot">6</div><div class="name">موافقة العميل</div><div class="no">الخطوة 6</div><div class="st">◷ قيد التنفيذ</div><div class="late">⚠ متأخر 5 أيام</div></div>
+          <div class="step wait"><div class="dot">8</div><div class="name">بدء التكليف</div><div class="no">الخطوة 8</div><div class="st">في الانتظار</div></div>
+          <div class="step wait"><div class="dot">20</div><div class="name">إتمام المهمة</div><div class="no">الخطوة 20</div><div class="st">في الانتظار</div></div>
+        </div>
+      </div>
+
+      <div class="wf-lane">
+        <div class="lane-hd"><div class="who"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M7 8V6a5 5 0 0 1 10 0v2"/></svg></div><b>قسم الحسابات</b><span class="cnt">3 خطوات</span></div>
+        <div class="steps">
+          <div class="step wait"><div class="dot">7</div><div class="name">موافقة الحسابات</div><div class="no">الخطوة 7</div><div class="st">في الانتظار</div></div>
+          <div class="step wait"><div class="dot">12</div><div class="name">موافقة الحسابات على الصرف</div><div class="no">الخطوة 12</div><div class="st">في الانتظار</div></div>
+          <div class="step wait"><div class="dot">21</div><div class="name">إشعار الحسابات بانتهاء المهمة</div><div class="no">الخطوة 21</div><div class="st">في الانتظار</div></div>
+        </div>
+      </div>
+    </div>
+    <aside class="sidebar">
+      <div class="side-brand"><div class="logo">ق</div><b>القلم<span>للخدمات القانونية</span></b></div>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1V9.5"/></svg> لوحة التحكم</button>
+      <button class="nav-item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> المهام <span class="cnt">368</span></button>
+      <div class="nav-group">القسم التجاري</div>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6"/></svg> الشركات</button>
+      <button class="nav-item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5ZM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> تأسيس شركة</button>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg> زيادة رأس المال</button>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════ الأقسام ══════════ -->
+<section class="screen" id="sec">
+  <div class="app">
+    <div class="main">
+      <div class="topbar"><h2>الأقسام</h2><div class="search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg><input placeholder="بحث في الأقسام..."></div><div class="avatar">أ</div></div>
+      <div class="sec-grid">
+        <div class="sec-card"><div class="ico" style="background:var(--primary-g);color:var(--primary-2)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M6 21V8l6-4 6 4v13"/></svg></div><h4>إدارة القضايا</h4><p>القضايا المدنية والتجارية والجنائية والشرعية والتنفيذ.</p><div class="foot">◆ 7 أنواع · <span class="pill teal">142 نشطة</span></div></div>
+        <div class="sec-card"><div class="ico" style="background:var(--gold-g);color:var(--gold)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6"/></svg></div><h4>القسم التجاري</h4><p>تأسيس الشركات، بيع الأسهم، زيادة رأس المال، الحسابات الختامية.</p><div class="foot">◆ 12 خدمة · <span class="pill amber">28 قيد التنفيذ</span></div></div>
+        <div class="sec-card"><div class="ico" style="background:var(--teal-g);color:var(--teal)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M7 8V6a5 5 0 0 1 10 0v2"/></svg></div><h4>قسم الحسابات</h4><p>الفواتير، المدفوعات، الموافقات المالية، والتقارير المحاسبية.</p><div class="foot">◆ متزامن · <span class="pill green">محدّث</span></div></div>
+        <div class="sec-card"><div class="ico" style="background:var(--green-g);color:var(--green)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M9 8l3-3 3 3M6 21V12h12v9"/></svg></div><h4>المعاملات والعقارات</h4><p>تصديق الأوراق، نقل الملكية، تسجيل العقارات، الحجج.</p><div class="foot">◆ 9 خدمات · <span class="pill teal">54 معاملة</span></div></div>
+        <div class="sec-card"><div class="ico" style="background:var(--primary-g);color:var(--primary-2)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><path d="M4 20a5 5 0 0 1 10 0M16 6a3 3 0 0 1 0 6"/></svg></div><h4>الموارد البشرية</h4><p>الموظفون، الحضور، التكليفات، وتقييم الأداء.</p><div class="foot">◆ 24 موظف · <span class="pill green">نشط</span></div></div>
+        <div class="sec-card"><div class="ico" style="background:var(--red-g);color:var(--red)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.4 2.1L8 11.5a16 16 0 0 0 6 6l1.1-1.3a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2Z"/></svg></div><h4>مركز الاتصال</h4><p>الاستقبال، العملاء المحتملون، التذاكر، سجل التواصل والمتابعات.</p><div class="foot">◆ اليوم · <span class="pill amber">3 تذاكر مفتوحة</span></div></div>
+      </div>
+    </div>
+    <aside class="sidebar">
+      <div class="side-brand"><div class="logo">ق</div><b>القلم<span>للخدمات القانونية</span></b></div>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1V9.5"/></svg> لوحة التحكم</button>
+      <div class="nav-group">الأقسام</div>
+      <button class="nav-item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M6 21V8l6-4 6 4v13"/></svg> إدارة القضايا</button>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6"/></svg> القسم التجاري</button>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M7 8V6a5 5 0 0 1 10 0v2"/></svg> الحسابات</button>
+    </aside>
+  </div>
+</section>
+
+</div>
+
+<script>
+const btns=document.querySelectorAll('.demo-nav button');
+const screens=document.querySelectorAll('.screen');
+btns.forEach(b=>b.addEventListener('click',()=>{
+  btns.forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  screens.forEach(s=>s.classList.remove('on'));
+  document.getElementById(b.dataset.s).classList.add('on');
+  document.querySelector('.stage').scrollTop=0;
+}));
+// إظهار/إخفاء كلمة المرور
+document.querySelectorAll('.eye').forEach(e=>e.addEventListener('click',()=>{
+  const i=e.parentElement.querySelector('input');i.type=i.type==='password'?'text':'password';
+}));
+</script>
+</body>
+</html>
